@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  edge:
+    build:
+      context: .
+    image: airensoft/ovenmediaengine:0.12.6
+    volumes:
+    - /ome_conf/:/opt/ovenmediaengine/bin/edge_conf/
+    ports:
+    - "3334:3334/tcp"
+    - "8090:8090/tcp"
+    - "10000-10005:10000-10005/udp"
+    - "5556:5556/tcp"
+    environment:
+    - DEFAULT_ORIGIN_SERVER=185.41.162.45
+    - OME_SIGNALLING_PORT=3334
+    - OME_ICE_CANDIDATES=*:10000-10005/udp
+    command: /opt/ovenmediaengine/bin/OvenMediaEngine -c edge_conf

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Server version="8">
+        <Name>OvenMediaEngine</Name>
+        <!-- Host type (origin/edge) -->
+        <Type>edge</Type>
+        <!-- Specify IP address to bind (* means all IPs) -->
+        <IP>*</IP>
+
+        <!-- Settings for the ports to bind -->
+        <Bind>
+                <Providers>
+                        <!-- Currently, OME doesn't support using the specified port for OVT Provider -->
+                        <OVT>
+                                <Port>9001</Port>
+                        </OVT>
+                </Providers>
+
+                <Publishers>
+                        <WebRTC>
+                                <Signalling>
+                                        <Port>${env:OME_SIGNALLING_PORT:3334}</Port>
+                                        <!-- If you want to use TLS, specify the TLS port -->
+                                        <TLSPort>5556</TLSPort>
+                                </Signalling>
+                                <IceCandidates>
+                                        <IceCandidate>${env:OME_ICE_CANDIDATES:*:10000-10005/udp}</IceCandidate>
+                                </IceCandidates>
+                        </WebRTC>
+                </Publishers>
+        </Bind>
+        <VirtualHosts>
+                <VirtualHost include="VHost*.xml" />
+                <VirtualHost>
+                        <Name>default</Name>
+                        <Host>
+                                <Names>
+                                        <Name>*</Name>
+                                </Names>
+                                
+                                <TLS>
+                                        <CertPath>/opt/ovenmediaengine/bin/edge_conf/cert.pem</CertPath>
+                                        <KeyPath>/opt/ovenmediaengine/bin/edge_conf/privkey.pem</KeyPath>
+                                        <ChainCertPath>/opt/ovenmediaengine/bin/edge_conf/chain.pem</ChainCertPath>
+                                </TLS>
+                                
+                        </Host>
+                        <Origins>
+                                <Origin>
+                                        <Location>/</Location>
+                                        <Pass>
+                                                <Scheme>ovt</Scheme>
+                                                <Urls>
+                                                        <Url>${env:DEFAULT_ORIGIN_SERVER:}:${env:DEFAULT_ORIGIN_PORT:9000}/</Url>
+                                                </Urls>
+                                        </Pass>
+                                </Origin>
+                        </Origins>
+		</VirtualHost> 
+	</VirtualHosts> 
+</Server>
