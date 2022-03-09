@@ -1,0 +1,32 @@
+#!/bin/bash
+echo "Stop service nginx and apache2"
+sudo systemctl disable nginx.service
+service nginx stop
+sudo systemctl disable apache2.service
+service apache2 stop
+
+echo "Install package"
+sudo apt -y update
+sudo apt -y install docker.io
+sudo apt -y install docker-compose
+sudo apt -y install certbot
+
+echo "Install OME"
+docker pull airensoft/ovenmediaengine
+
+echo "Create certificate"
+certbot certonly -d $1 -m norin@kqsquad.dev --standalone --agree-tos
+
+echo "Configuration OME and connect certificate"
+mkdir /ome_conf
+cp /etc/letsencrypt/live/$1/cert.pem /ome_conf/
+cp /etc/letsencrypt/live/$1/chain.pem /ome_conf/
+cp /etc/letsencrypt/live/$1/privkey.pem /ome_conf/
+wget -P /ome_conf/ https://raw.githubusercontent.com/NorinD/OME_edge-conf/main/Logger.xml
+wget -P /ome_conf/ https://raw.githubusercontent.com/NorinD/OME_edge-conf/main/Server.xml
+wget -P /ome_conf/ https://raw.githubusercontent.com/NorinD/OME_edge-conf/main/docker-compose.yml
+
+echo "Starting and check container OME Edge"
+docker-compose -f /ome_conf/docker-compose.yml up -d
+docker ps
+ 
