@@ -13,7 +13,7 @@ services:
     - "10000-10005:10000-10005/udp"
     - "5556:5556/tcp"
     environment:
-    - DEFAULT_ORIGIN_SERVER=185.41.162.45
+    - DEFAULT_ORIGIN_SERVER=5.181.253.204
     - OME_SIGNALLING_PORT=3334
     - OME_ICE_CANDIDATES=*:10000-10005/udp
     command: /opt/ovenmediaengine/bin/OvenMediaEngine -c edge_conf
