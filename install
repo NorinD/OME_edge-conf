@@ -12,7 +12,7 @@ sudo apt -y install docker-compose
 sudo apt -y install certbot
 
 echo "Install OME"
-docker pull airensoft/ovenmediaengine
+docker pull airensoft/ovenmediaengine:0.13.1
 
 echo "Create certificate"
 certbot certonly -d $1 -m norin@kqsquad.dev --standalone --agree-tos
